@@ -6,23 +6,28 @@
 <h3>Connexion</h3>
 
 <input @bind="login" placeholder="Utilisateur" />
+<input @bind="password" type="password" placeholder="Mot de passe" />
 <button class="btn btn-primary" @onclick="Connecter">Connecter</button>
 
 <p>@message</p>
 
 @code {
     private string login = string.Empty;
+    private string password = string.Empty;
     private string message = string.Empty;
 
     private async Task Connecter()
     {
-        // Demande du token à l'API d'authentification
-        var client = HttpClientFactory.CreateClient("AuthApi");
-        var response = await client.PostAsync($"api/authentication?login={Uri.EscapeDataString(login)}", null);
+        // Ancienne version (sans mot de passe) :
+        // var response = await client.PostAsync($"api/authentication?login={Uri.EscapeDataString(login)}", null);
 
-        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+        // Demande du token Keycloak via l'API d'authentification
+        var client = HttpClientFactory.CreateClient("AuthApi");
+        var response = await client.PostAsJsonAsync("api/authentication/keycloak", new { login, password });
+
+        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
         {
-            message = "L'utilisateur n'existe pas";
+            message = "Login ou mot de passe incorrect";
             return;
         }
 

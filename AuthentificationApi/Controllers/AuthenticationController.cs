@@ -55,4 +55,33 @@ public class AuthenticationController : ControllerBase
 
         return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) }); // 200 OK
     }
+
+    // Version Keycloak : prend login + mot de passe et renvoie le token généré par Keycloak
+    [HttpPost("keycloak")]
+    public async Task<IActionResult> LoginKeycloak(LoginKeycloakRequest request)
+    {
+        // Demande du token à Keycloak (grant "password" du client public)
+        var client = _httpClientFactory.CreateClient();
+        var response = await client.PostAsync(_configuration["Keycloak:TokenUrl"], new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            ["grant_type"] = "password",
+            ["client_id"] = _configuration["Keycloak:ClientId"]!,
+            ["username"] = request.Login,
+            ["password"] = request.Password
+        }));
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return Unauthorized("Login ou mot de passe incorrect"); // 401
+        }
+
+        var resultat = await response.Content.ReadFromJsonAsync<KeycloakTokenResponse>();
+
+        return Ok(new { token = resultat!.access_token }); // 200 OK, même format que l'ancien endpoint
+    }
+
+    public record LoginKeycloakRequest(string Login, string Password);
+
+    // Réponse de Keycloak (seul le token d'accès nous intéresse)
+    private record KeycloakTokenResponse(string access_token);
 }

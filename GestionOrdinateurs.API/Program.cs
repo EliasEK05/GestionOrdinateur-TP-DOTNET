@@ -1,4 +1,5 @@
-using System.Text;
+using System.Security.Claims;
+using System.Text.Json;
 using GestionOrdinateurs.API;
 
 using GestionOrdinateurs.Shared;
@@ -38,8 +39,9 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Configuration JWT
-var jwtKey = builder.Configuration["Jwt:Key"] ?? "";
-var key = Encoding.ASCII.GetBytes(jwtKey);
+// Ancienne version (token généré par AuthentificationApi avec Jwt:Key) :
+// var jwtKey = builder.Configuration["Jwt:Key"] ?? "";
+// var key = Encoding.ASCII.GetBytes(jwtKey);
 
 builder.Services.AddAuthentication(options =>
 {
@@ -47,19 +49,33 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
+    // Keycloak : les clés de signature sont récupérées automatiquement depuis le realm
+    options.Authority = builder.Configuration["Keycloak:Authority"];
     options.RequireHttpsMetadata = false;
     options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(key),
+        // IssuerSigningKey = new SymmetricSecurityKey(key), // ancienne clé
         ValidateIssuer = false,
-        ValidateAudience = false
+        ValidateAudience = false,
+        NameClaimType = "preferred_username" // login Keycloak
     };
     options.Events = new JwtBearerEvents
     {
         OnTokenValidated = context =>
         {
+            // Keycloak met les rôles dans realm_access.roles : on les copie en rôles .NET pour [Authorize(Roles = "Admin")]
+            var realmAccess = context.Principal?.FindFirst("realm_access")?.Value;
+            if (realmAccess != null && context.Principal?.Identity is ClaimsIdentity identity)
+            {
+                using var json = JsonDocument.Parse(realmAccess);
+                foreach (var role in json.RootElement.GetProperty("roles").EnumerateArray())
+                {
+                    identity.AddClaim(new Claim(ClaimTypes.Role, role.GetString()!));
+                }
+            }
+
             Console.WriteLine($"Utilisateur utilisant un Token Valide --- {context.Principal?.Identity?.Name ?? "Anonymous"}");
             return Task.CompletedTask;
         },

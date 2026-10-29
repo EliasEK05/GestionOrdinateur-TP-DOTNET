@@ -22,8 +22,11 @@ services:
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-      KC_HOSTNAME: localhost
+      # URL publique (navigateur) : les tokens ont toujours l'issuer http://localhost:8180
+      KC_HOSTNAME: http://localhost:8180
       KC_HOSTNAME_PORT: 8180
+      # Les conteneurs (API) récupèrent les clés via http://keycloak:8080 et non localhost
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
       KC_HTTP_ENABLED: "true"
       KC_HEALTH_ENABLED: "true"
       KC_HOSTNAME_STRICT_BACKCHANNEL: "false"
@@ -51,6 +54,7 @@ services:
       ASPNETCORE_URLS: http://+:5216
       # Entre conteneurs, on appelle l'API par son nom de service (pas localhost)
       GestionOrdinateursApi: http://gestionordinateurs-api:5151/
+      Keycloak__TokenUrl: http://keycloak:8080/realms/gestionordinateurs/protocol/openid-connect/token
     depends_on:
       - postgres
       - keycloak
@@ -70,8 +74,11 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:5151
+      # Realm Keycloak joint par le nom du service (validation des tokens)
+      Keycloak__Authority: http://keycloak:8080/realms/gestionordinateurs
     depends_on:
       - postgres
+      - keycloak
     networks:
       - appnet
 
