@@ -1,0 +1,119 @@
+services:
+
+  # Base PostgreSQL
+  postgres:
+    image: postgres:15
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: GestionOrdinateursDb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - appnet
+
+  # Serveur d'identité OIDC (console : http://localhost:8180)
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.8.1
+    container_name: keycloak
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 8180
+      KC_HTTP_ENABLED: "true"
+      KC_HEALTH_ENABLED: "true"
+      KC_HOSTNAME_STRICT_BACKCHANNEL: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+    command: start-dev
+    ports:
+      - "8180:8080"
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+    networks:
+      - appnet
+
+  # API d'authentification (génère le JWT)
+  # Port 5216 conservé : le client Blazor appelle http://localhost:5216
+  authentification-api:
+    image: ${DOCKER_ACCOUNT}/authentificationapi:latest
+    build:
+      context: .
+      dockerfile: AuthentificationApi/Dockerfile
+    container_name: authentification_api
+    ports:
+      - "5216:5216"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:5216
+      # Entre conteneurs, on appelle l'API par son nom de service (pas localhost)
+      GestionOrdinateursApi: http://gestionordinateurs-api:5151/
+    depends_on:
+      - postgres
+      - keycloak
+      - gestionordinateurs-api
+    networks:
+      - appnet
+
+  # API principale (ordinateurs, réparations, users)
+  gestionordinateurs-api:
+    image: ${DOCKER_ACCOUNT}/gestionordinateurs-api:latest
+    build:
+      context: .
+      dockerfile: GestionOrdinateurs.API/Dockerfile
+    container_name: gestionordinateurs_api
+    ports:
+      - "5151:5151"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:5151
+    depends_on:
+      - postgres
+    networks:
+      - appnet
+
+  # Gateway YARP (port 5010 demandé dans le TP précédent)
+  gateway:
+    image: ${DOCKER_ACCOUNT}/gestionordinateurs-gateway:latest
+    build:
+      context: .
+      dockerfile: GestionOrdinateurs.Gateway/Dockerfile
+    container_name: gestionordinateurs_gateway
+    ports:
+      - "5010:5010"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:5010
+      # Remplace l'adresse localhost:5151 du appsettings.json par le nom du service
+      ReverseProxy__Clusters__gestionOrdinateursCluster__Destinations__gestionOrdinateursApi__Address: http://gestionordinateurs-api:5151/
+    depends_on:
+      - gestionordinateurs-api
+    networks:
+      - appnet
+
+  # Front Blazor WebAssembly servi par nginx (port 5000)
+  client:
+    image: ${DOCKER_ACCOUNT}/gestionordinateurs-client:latest
+    build:
+      context: .
+      dockerfile: GestionOrdinateurs.Client/Dockerfile
+    container_name: gestionordinateurs_client
+    ports:
+      - "5000:5000"
+    depends_on:
+      - gateway
+      - authentification-api
+    networks:
+      - appnet
+
+# Réseau commun : les conteneurs se joignent par leur nom de service
+networks:
+  appnet:
+
+# Volumes : les données Postgres et Keycloak survivent à un docker compose down
+volumes:
+  postgres_data:
+  keycloak_data:
