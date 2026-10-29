@@ -1,0 +1,7 @@
+# Fichiers exclus du contexte de build Docker (générés par la compilation locale)
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+.git/
+.github/
