@@ -20,9 +20,6 @@ FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/out ./
 
-# Base SQLite avec les données existantes (ordinateurs, réparations, users)
-COPY ./GestionOrdinateurs.API/parcinfo.db ./
-
 # Development pour garder Swagger actif
 ENV ASPNETCORE_ENVIRONMENT=Development
 
