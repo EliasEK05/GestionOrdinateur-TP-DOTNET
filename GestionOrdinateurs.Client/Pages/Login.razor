@@ -1,0 +1,37 @@
+@page "/login"
+@inject IHttpClientFactory HttpClientFactory
+@inject ISessionStorageService SessionStorage
+@inject NavigationManager Navigation
+
+<h3>Connexion</h3>
+
+<input @bind="login" placeholder="Utilisateur" />
+<button class="btn btn-primary" @onclick="Connecter">Connecter</button>
+
+<p>@message</p>
+
+@code {
+    private string login = string.Empty;
+    private string message = string.Empty;
+
+    private async Task Connecter()
+    {
+        // Demande du token à l'API d'authentification
+        var client = HttpClientFactory.CreateClient("AuthApi");
+        var response = await client.PostAsync($"api/authentication?login={Uri.EscapeDataString(login)}", null);
+
+        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            message = "L'utilisateur n'existe pas";
+            return;
+        }
+
+        var resultat = await response.Content.ReadFromJsonAsync<TokenReponse>();
+
+        // Sauvegarde du token en session puis retour à l'accueil
+        await SessionStorage.SetItemAsync("token", resultat!.Token);
+        Navigation.NavigateTo("/");
+    }
+
+    private record TokenReponse(string Token);
+}

@@ -1,0 +1,16 @@
+C:\Users\elias\AppData\Local\Temp\claude\c--Users-elias-Documents-dotnet-GestionOrdinateurs\edf14139-8cd7-4a4f-ba33-80c8aad35a96\scratchpad\build\appsettings.Development.json
+C:\Users\elias\AppData\Local\Temp\claude\c--Users-elias-Documents-dotnet-GestionOrdinateurs\edf14139-8cd7-4a4f-ba33-80c8aad35a96\scratchpad\build\appsettings.json
+C:\Users\elias\AppData\Local\Temp\claude\c--Users-elias-Documents-dotnet-GestionOrdinateurs\edf14139-8cd7-4a4f-ba33-80c8aad35a96\scratchpad\build\GestionOrdinateurs.API.staticwebassets.endpoints.json
+C:\Users\elias\AppData\Local\Temp\claude\c--Users-elias-Documents-dotnet-GestionOrdinateurs\edf14139-8cd7-4a4f-ba33-80c8aad35a96\scratchpad\build\GestionOrdinateurs.API.exe
+C:\Users\elias\AppData\Local\Temp\claude\c--Users-elias-Documents-dotnet-GestionOrdinateurs\edf14139-8cd7-4a4f-ba33-80c8aad35a96\scratchpad\build\GestionOrdinateurs.API.deps.json
+C:\Users\elias\AppData\Local\Temp\claude\c--Users-elias-Documents-dotnet-GestionOrdinateurs\edf14139-8cd7-4a4f-ba33-80c8aad35a96\scratchpad\build\GestionOrdinateurs.API.runtimeconfig.json
+C:\Users\elias\AppData\Local\Temp\claude\c--Users-elias-Documents-dotnet-GestionOrdinateurs\edf14139-8cd7-4a4f-ba33-80c8aad35a96\scratchpad\build\GestionOrdinateurs.API.dll
+C:\Users\elias\AppData\Local\Temp\claude\c--Users-elias-Documents-dotnet-GestionOrdinateurs\edf14139-8cd7-4a4f-ba33-80c8aad35a96\scratchpad\build\GestionOrdinateurs.API.pdb
+C:\Users\elias\AppData\Local\Temp\claude\c--Users-elias-Documents-dotnet-GestionOrdinateurs\edf14139-8cd7-4a4f-ba33-80c8aad35a96\scratchpad\buildt\appsettings.Development.json
+C:\Users\elias\AppData\Local\Temp\claude\c--Users-elias-Documents-dotnet-GestionOrdinateurs\edf14139-8cd7-4a4f-ba33-80c8aad35a96\scratchpad\buildt\appsettings.json
+C:\Users\elias\AppData\Local\Temp\claude\c--Users-elias-Documents-dotnet-GestionOrdinateurs\edf14139-8cd7-4a4f-ba33-80c8aad35a96\scratchpad\buildt\GestionOrdinateurs.API.staticwebassets.endpoints.json
+C:\Users\elias\AppData\Local\Temp\claude\c--Users-elias-Documents-dotnet-GestionOrdinateurs\edf14139-8cd7-4a4f-ba33-80c8aad35a96\scratchpad\buildt\GestionOrdinateurs.API.exe
+C:\Users\elias\AppData\Local\Temp\claude\c--Users-elias-Documents-dotnet-GestionOrdinateurs\edf14139-8cd7-4a4f-ba33-80c8aad35a96\scratchpad\buildt\GestionOrdinateurs.API.deps.json
+C:\Users\elias\AppData\Local\Temp\claude\c--Users-elias-Documents-dotnet-GestionOrdinateurs\edf14139-8cd7-4a4f-ba33-80c8aad35a96\scratchpad\buildt\GestionOrdinateurs.API.runtimeconfig.json
+C:\Users\elias\AppData\Local\Temp\claude\c--Users-elias-Documents-dotnet-GestionOrdinateurs\edf14139-8cd7-4a4f-ba33-80c8aad35a96\scratchpad\buildt\GestionOrdinateurs.API.dll
+C:\Users\elias\AppData\Local\Temp\claude\c--Users-elias-Documents-dotnet-GestionOrdinateurs\edf14139-8cd7-4a4f-ba33-80c8aad35a96\scratchpad\buildt\GestionOrdinateurs.API.pdb

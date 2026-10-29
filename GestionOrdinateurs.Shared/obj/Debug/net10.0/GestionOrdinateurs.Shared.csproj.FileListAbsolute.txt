@@ -1,0 +1,6 @@
+C:\Users\elias\AppData\Local\Temp\claude\c--Users-elias-Documents-dotnet-GestionOrdinateurs\edf14139-8cd7-4a4f-ba33-80c8aad35a96\scratchpad\build\GestionOrdinateurs.Shared.deps.json
+C:\Users\elias\AppData\Local\Temp\claude\c--Users-elias-Documents-dotnet-GestionOrdinateurs\edf14139-8cd7-4a4f-ba33-80c8aad35a96\scratchpad\build\GestionOrdinateurs.Shared.dll
+C:\Users\elias\AppData\Local\Temp\claude\c--Users-elias-Documents-dotnet-GestionOrdinateurs\edf14139-8cd7-4a4f-ba33-80c8aad35a96\scratchpad\build\GestionOrdinateurs.Shared.pdb
+C:\Users\elias\AppData\Local\Temp\claude\c--Users-elias-Documents-dotnet-GestionOrdinateurs\edf14139-8cd7-4a4f-ba33-80c8aad35a96\scratchpad\buildt\GestionOrdinateurs.Shared.deps.json
+C:\Users\elias\AppData\Local\Temp\claude\c--Users-elias-Documents-dotnet-GestionOrdinateurs\edf14139-8cd7-4a4f-ba33-80c8aad35a96\scratchpad\buildt\GestionOrdinateurs.Shared.dll
+C:\Users\elias\AppData\Local\Temp\claude\c--Users-elias-Documents-dotnet-GestionOrdinateurs\edf14139-8cd7-4a4f-ba33-80c8aad35a96\scratchpad\buildt\GestionOrdinateurs.Shared.pdb

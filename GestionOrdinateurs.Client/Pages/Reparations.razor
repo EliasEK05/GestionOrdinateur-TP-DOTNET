@@ -1,0 +1,72 @@
+@page "/reparations"
+@using System.Net.Http.Headers
+@inject IHttpClientFactory HttpClientFactory
+@inject ISessionStorageService SessionStorage
+
+<h3>Historique des réparations</h3>
+
+@if (message != null)
+{
+    <p>@message</p>
+}
+else if (historique == null)
+{
+    <p>Chargement...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Ordinateur</th>
+                <th>Technicien</th>
+                <th>Type de réparation</th>
+                <th>Date d'intervention</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ligne in historique)
+            {
+                <tr>
+                    <td>@ligne.NomOrdinateur</td>
+                    <td>@ligne.Technicien</td>
+                    <td>@ligne.TypeReparation</td>
+                    <td>@ligne.DateIntervention.ToString("dd/MM/yyyy HH:mm")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<HistoriqueReparation>? historique;
+    private string? message;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Le token est nécessaire : l'API est protégée par [Authorize]
+        var token = await SessionStorage.GetItemAsync<string>("token");
+        if (string.IsNullOrEmpty(token))
+        {
+            message = "Veuillez vous connecter";
+            return;
+        }
+
+        // Appel via la Gateway avec le token dans l'en-tête Authorization
+        var client = HttpClientFactory.CreateClient("Gateway");
+        var requete = new HttpRequestMessage(HttpMethod.Get, "api/reparations/historique");
+        requete.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        var response = await client.SendAsync(requete);
+        if (!response.IsSuccessStatusCode)
+        {
+            message = $"Erreur {(int)response.StatusCode}";
+            return;
+        }
+
+        historique = await response.Content.ReadFromJsonAsync<List<HistoriqueReparation>>();
+    }
+
+    // Même structure que HistoriqueReparationRecord de l'API
+    private record HistoriqueReparation(int OrdinateurId, string NomOrdinateur, string Technicien, string TypeReparation, DateTime DateIntervention);
+}
